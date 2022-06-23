@@ -1,20 +1,23 @@
-int[] decNums = new int[3]; // integer array gang
+int[] decNums = new int[3]; // Initializing integer arrays for each numerical representation
 int[] binNums = new int[8];
 int[] octNums = new int[3];
-String[] hexNums = new String[2]; // string array gang
-String joinedDecNums, joinedBinNums, joinedOctNums; // string gang
-int digit, numer, decOutput, otherThing, binKey, binDigit, quantity; // integer gang
-char asciiOutput; // character
-void setup() {
+String[] hexNums = new String[2]; // Initialized a String array accounting for Hexadecimal's mixed format (String and Integer)
+String joinedDecNums, joinedBinNums, joinedOctNums; // Initialized Strings for the final output of each number system
+
+int digit, numer, decOutput, otherThing, binKey, binDigit, quantity; // Necessary integer variables to account for the attributes of a 'number'
+char asciiOutput; // A character for a number's ASCII equivalent
+
+void setup() { // Initializer method, runs at start to create U.I.
   size(450,435);
   background(255);
   textAlign(CENTER);
-  digit = 0;
-  binKey = -1;
+  digit = 0; // Accounts for which digit the user is entering
+  binKey = -1; // Determines if the user is converting from decimal to other numbers, or from binary to other numbers.
 }
-void draw() {
+
+void draw() { // Runs continuously as the application is open
   conversion();
-  background(255); // visuals start here
+  background(255); // Visual/more U.I. start here
   
   fill(0);
   rect(0,0, width, height);
@@ -28,7 +31,7 @@ void draw() {
   text("Octal", 225, 290);
   text("ASCII Letter", 225, 370);
   
-  textSize(35); // outputs
+  textSize(35); // The output of each number system conversion is formatted on the screen here
   fill(0);
   text(joinedBinNums, 225, 170);
   text(hexNums[0] + hexNums[1], 225, 250);
@@ -37,23 +40,25 @@ void draw() {
   text(joinedDecNums, 225, 90);
 }
 
-void conversion() {
-  joinedBinNums = join(nf(binNums, 0), "");
+void conversion() { // Parent method for conversions
+  joinedBinNums = join(nf(binNums, 0), ""); // Formatting the Integer arrays as Strings
   joinedDecNums = join(nf(decNums, 0), ""); 
   joinedOctNums = join(nf(octNums, 0), "");
-  if(binKey == -1) {
+  
+  if(binKey == -1) { // Checks if the user is converting from binary or decimal
     binConvert();
   }
   else if(binKey == 1) {
     decConvert();
   }
+  
   decOutput = int(joinedDecNums);
-  hexConvert();
+  hexConvert(); // Helper/method-children called for each system's conversions
   octConvert();
   asciiConvert();
 }
 
-String decConvert() {
+String decConvert() { // Converts a user's binary input to decimal
   otherThing=0;
   for(int i = 0; i < 8; i++) {
     quantity = int(binNums[i] * (pow(2, (7-i))));
@@ -65,10 +70,10 @@ String decConvert() {
   return(joinedDecNums);
 }
 
-void keyPressed() {
-    if(key==BACKSPACE) {
+void keyPressed() { // Keylogging method to keep track of user input
+    if(key==BACKSPACE) { // Backspace is used to go back a digit
       if(binKey==-1) {
-        check(-1);
+        check(-1); // check and binCheck are methods to prevent index-out-of-bounds exception for decimal and binary input respectively
       }
       else {
         binCheck(-1);
@@ -93,7 +98,7 @@ void keyPressed() {
           }
         }
     }
-    if(key==TAB) {
+    if(key==TAB) { // Tab is set as the key to transition between decimal and binary input types
       binKey=binKey*-1;
       binDigit = 0;
       digit = 0;
@@ -110,7 +115,7 @@ void keyPressed() {
   }
 }
 
-void binCheck(int i) {
+void binCheck(int i) { // Method for protection from index-out-of-bounds with binary input
   if((binDigit+i)>7 || (binDigit+i==-1)) {
   }
   else {
@@ -118,7 +123,7 @@ void binCheck(int i) {
   }
 }
 
-void check(int i) {
+void check(int i) { // Method for protection from index-out-of-bounds with decimal input
   if((digit+i)>2 || (digit+i==-1)) {
   }
   else {
@@ -126,7 +131,7 @@ void check(int i) {
   }
 }
 
-int[] binConvert() {
+int[] binConvert() { // Converts the inputted number into binary (when binary is not the input type)
   otherThing = decOutput;
   if(otherThing <= 255) {
     if(otherThing == 255) {
@@ -144,7 +149,7 @@ int[] binConvert() {
   return(binNums);
 }
 
-String[] hexConvert() { // my child #2
+String[] hexConvert() { // Converts the inputted number into hexadecimal
   otherThing = decOutput;
   if(otherThing <= 255) {
     if(otherThing == 255) {
@@ -152,7 +157,7 @@ String[] hexConvert() { // my child #2
       hexNums[1] = "F";
     }
     else {
-      for(int i =0; i<2; i++) { // again probably a better way to do it but its chill
+      for(int i =0; i<2; i++) { // Accounting for the mixed formatting of the hexadecimal number system
         if(otherThing%16 == 10) {
           hexNums[1-i] = "A";
         }
@@ -185,7 +190,7 @@ String[] hexConvert() { // my child #2
   return(hexNums);
 }
 
-int[] octConvert() {
+int[] octConvert() { // Converts the inputted number into octal
   otherThing = decOutput;
   if(otherThing <= 255) {
     if(otherThing == 255) {
@@ -208,7 +213,7 @@ int[] octConvert() {
   return(octNums);
 }
 
-char asciiConvert() {
+char asciiConvert() { // Returns the ASCII equivalent of the inputted number
   if(decOutput > 64 && decOutput < 123){
     asciiOutput = char(decOutput);
   }
